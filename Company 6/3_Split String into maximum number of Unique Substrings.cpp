@@ -1,32 +1,39 @@
 class Solution {
 public:
-    void f(int i,string curr, string s,map<string,int> m,int &ans){
-        if(i==s.length()){
-            if(m[curr]==0){
-                int y=m.size()-1;
-                ans=max(ans,y);
-            }
-            else{
-                int y=m.size();
-                ans=max(ans,y);
-            }
+    unordered_set<string>st;
+    int ans=INT_MIN;
+    int maxUniqueSplit(string s) 
+    {
+       int count=0;
+       fun(s,count);
+       return ans;
+    }
+    void fun(string s,int count)
+    {
+        //cout<<s<<endl;
+        if(s.length()==0)
+        {
+            ans=max(ans,count);
             return;
         }
+        string first="";
+        string second="";
 
-        curr+=s[i];
+        for(int i=0;i<s.length();i++)
+        {
+            first.push_back(s[i]);
 
-        if(m[curr]==0){
-            m[curr]++;
-            f(i+1,"",s,m,ans);
+            if(st.find(first)==st.end())   //first entry of this type of string
+            {
+                st.insert(first);
+                second = s.substr(i+1,s.length());
+                fun(second,count+1);
+                st.erase(first);         //backtraing
+            }	
+            else
+            {
+                continue;
+            }
         }
-
-        return;
-    }
-    int maxUniqueSplit(string s) {
-        map<string,int>m;
-        int ans=0;
-        f(0,"",s,m,ans);
-
-        return ans;
     }
 };
